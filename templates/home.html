@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block content %}
+<section class="hero">
+    <h1>Welcome to DSALectures <small>subject to change</small></h1>
+    <div class="home-search"><input id="home-search" placeholder="Search posts, lectures, captions..."/></div>
+    <div class="tile-row">
+        <div class="tile" onclick="location.href='/lectures'"> <div>Lectures</div></div>
+        <div class="tile" onclick="location.href='/collaborators'">
+<div>Collaborators</div></div>
+    </div>
+</section>
+{% endblock %}

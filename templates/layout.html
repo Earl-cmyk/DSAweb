@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>DSALectures</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+    <nav class="nav">
+        <div class="brand">DSALectures</div>
+        <div class="nav-search"><input id="global-search" placeholder="Search posts..."/></div>
+        <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/lectures">Lectures</a>
+        <a href="/collaborators">Collaborators</a>
+        <a href="#" id="settings-link">Settings</a>
+        </div>
+    </nav>
+    <main id="app">{% block content %}{% endblock %}</main>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

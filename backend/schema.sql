@@ -1,0 +1,31 @@
+-- posts table
+CREATE TABLE IF NOT EXISTS posts (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+title TEXT,
+caption TEXT,
+filename TEXT,
+votes INTEGER DEFAULT 0,
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- comments table
+CREATE TABLE IF NOT EXISTS comments (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+post_id INTEGER,
+author TEXT DEFAULT 'anonymous',
+content TEXT,
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE CASCADE
+);
+
+
+-- collaborators table
+CREATE TABLE IF NOT EXISTS collaborators (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+role TEXT,
+name TEXT,
+student_id TEXT,
+github TEXT
+);
+
