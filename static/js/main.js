@@ -747,3 +747,175 @@
   })();
 
 })();
+
+
+// Toggle post menu
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("three-dots")) {
+    const id = e.target.dataset.id;
+    const menu = document.getElementById(`menu-${id}`);
+    document.querySelectorAll(".post-menu-dropdown").forEach(m => m.classList.add("hidden"));
+    if (menu) menu.classList.toggle("hidden");
+  } else {
+    // Hide menu when clicking outside
+    document.querySelectorAll(".post-menu-dropdown").forEach(m => m.classList.add("hidden"));
+  }
+});
+
+// Handle edit
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("menu-edit")) {
+    const postId = e.target.dataset.id;
+    openEditModal(postId);
+  }
+});
+
+// Handle delete + undo timer
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("menu-delete")) {
+    const postId = e.target.dataset.id;
+    showDeleteSnackbar(postId);
+  }
+});
+
+function showDeleteSnackbar(postId) {
+  const snackbar = document.createElement("div");
+  snackbar.className = "snackbar";
+  snackbar.innerHTML = `
+    <span>Deleting post in <b id="countdown">5</b> seconds...</span>
+    <button id="undo-delete">Cancel</button>
+  `;
+  document.body.appendChild(snackbar);
+
+  let countdown = 5;
+  const timer = setInterval(() => {
+    countdown--;
+    document.getElementById("countdown").textContent = countdown;
+    if (countdown <= 0) {
+      clearInterval(timer);
+      deletePost(postId);
+      snackbar.remove();
+    }
+  }, 1000);
+
+  document.getElementById("undo-delete").onclick = () => {
+    clearInterval(timer);
+    snackbar.remove();
+  };
+}
+
+async function deletePost(postId) {
+  try {
+    const res = await fetch(`/api/posts/${postId}`, { method: "DELETE" });
+    if (res.ok) {
+      document.querySelector(`.post-card[data-id="${postId}"]`).remove();
+      showToast("Post deleted successfully");
+    } else {
+      showToast("Error deleting post");
+    }
+  } catch (err) {
+    showToast("Network error");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const postsList = document.getElementById("posts-list");
+  const snackbar = document.getElementById("snackbar");
+  const snackbarCancel = document.getElementById("snackbar-cancel");
+  let deleteTimeout;
+  let pendingDeleteId = null;
+
+  // Toggle 3-dot dropdown
+  postsList.addEventListener("click", (e) => {
+    if (e.target.classList.contains("three-dots")) {
+      const id = e.target.dataset.id;
+      // Hide all open menus first
+      document.querySelectorAll(".dropdown-menu").forEach(menu => menu.style.display = "none");
+
+      const menu = document.getElementById(`menu-${id}`);
+      if (menu) {
+        menu.style.display = "flex";
+        e.stopPropagation();
+      }
+    }
+  });
+
+  // Hide dropdown when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".dropdown-menu") && !e.target.classList.contains("three-dots")) {
+      document.querySelectorAll(".dropdown-menu").forEach(menu => menu.style.display = "none");
+    }
+  });
+
+  // --- EDIT POST ---
+  postsList.addEventListener("click", (e) => {
+    if (e.target.classList.contains("edit-post")) {
+      const id = e.target.dataset.id;
+      const postCard = document.querySelector(`.post-card[data-id='${id}']`);
+      const title = postCard.querySelector(".post-title").textContent;
+      const caption = postCard.querySelector(".post-body p").textContent;
+
+      document.getElementById("modal-title").textContent = "Edit Post";
+      document.getElementById("edit-post-id").value = id;
+      document.getElementById("post-title").value = title;
+      document.getElementById("post-caption").value = caption;
+      document.getElementById("post-modal").style.display = "block";
+
+      // Hide dropdown
+      document.querySelectorAll(".dropdown-menu").forEach(menu => menu.style.display = "none");
+    }
+  });
+
+  // --- DELETE POST ---
+  postsList.addEventListener("click", (e) => {
+    if (e.target.classList.contains("delete-post")) {
+      const id = e.target.dataset.id;
+      pendingDeleteId = id;
+      snackbar.style.display = "flex";
+
+      deleteTimeout = setTimeout(() => {
+        fetch(`/delete_post/${id}`, { method: "DELETE" })
+          .then(res => res.json())
+          .then(() => {
+            document.querySelector(`.post-card[data-id='${id}']`)?.remove();
+            snackbar.style.display = "none";
+          });
+      }, 5000);
+    }
+  });
+
+  // --- UNDO DELETE ---
+  snackbarCancel.addEventListener("click", () => {
+    clearTimeout(deleteTimeout);
+    snackbar.style.display = "none";
+    pendingDeleteId = null;
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const postsList = document.getElementById("posts-list");
+
+  // Toggle dropdown visibility
+  postsList.addEventListener("click", (e) => {
+    if (e.target.classList.contains("three-dots")) {
+      const id = e.target.dataset.id;
+
+      // Close all open menus first
+      document.querySelectorAll(".dropdown-menu").forEach(menu => menu.style.display = "none");
+
+      // Open the clicked one
+      const menu = document.getElementById(`menu-${id}`);
+      if (menu) {
+        menu.style.display = "flex";
+        e.stopPropagation(); // prevent closing immediately
+      }
+    }
+  });
+
+  // Close dropdowns when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".post-menu-wrapper")) {
+      document.querySelectorAll(".dropdown-menu").forEach(menu => menu.style.display = "none");
+    }
+  });
+});

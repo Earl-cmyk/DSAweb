@@ -12,7 +12,13 @@
     <article class="post-card" data-id="{{ post.id }}">
       <header>
         <h3 class="post-title">{{ post.title }}</h3>
-        <div class="post-menu three-dots" data-id="{{ post.id }}" tabindex="0" role="button" aria-label="Post menu">⋯</div>
+    <div class="three-dots" data-id="{{ post.id }}" tabindex="0" role="button" aria-label="Post menu">⋯</div>
+
+    <!-- Dropdown Menu -->
+    <div class="dropdown-menu" id="menu-{{ post.id }}">
+      <button class="edit-post" data-id="{{ post.id }}">✏️ Edit</button>
+      <button class="delete-post" data-id="{{ post.id }}">🗑️ Delete</button>
+        </div>
       </header>
 
       <div class="post-body">
@@ -55,6 +61,7 @@
   <div class="modal-content">
     <h2 id="modal-title">Create a Post</h2>
     <form id="post-form" enctype="multipart/form-data">
+      <input type="hidden" id="edit-post-id" value="" />
       <label for="post-title">Title:</label>
       <input type="text" name="title" id="post-title" required />
 
@@ -77,8 +84,8 @@
 
 <!-- Snackbar for delete confirmation -->
 <div id="snackbar" class="snackbar" aria-live="assertive" style="display:none;">
-  <span id="snackbar-msg">Deleting post...</span>
-  <button id="snackbar-cancel">Cancel</button>
+  <span id="snackbar-msg">Post deleted. Undo?</span>
+  <button id="snackbar-cancel">Undo</button>
 </div>
 
 <footer class="footer">

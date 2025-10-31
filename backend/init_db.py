@@ -8,7 +8,8 @@ def main():
     if not db_path:
         db_path = sys.argv[1] if len(sys.argv) > 1 else "dsa.db"
 
-    schema_path = "schema.sql"
+    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    schema_path = os.path.join(root_dir, "schema.sql")
 
     if not os.path.exists(schema_path):
         print(f"Error: '{schema_path}' not found in project root.")
