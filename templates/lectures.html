@@ -1,25 +1,89 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
+{% block title %}Lectures | DSAWebLectures{% endblock %}
 {% block content %}
-<section class="page">
-        <div class="page-head">
-            <h2>Lectures</h2>
-            <button id="create-post">Create a post</button>
-        </div>
-        <div id="posts"></div>
-            <!-- create-post modal -->
-        <div id="post-modal" class="modal hidden">
-        <div class="modal-card">
-                <h3>Create Post</h3>
-                <form id="post-form">
-                <input name="title" placeholder="Title" />
-                <textarea name="caption" placeholder="Caption"></textarea>
-                <input type="file" name="file" />
-                <div class="modal-actions">
-                <button type="submit">Publish</button>
-                <button type="button" id="close-modal">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</section>
+<main class="lectures-page">
+  <section class="lectures-header">
+    <button id="btn-create-post" aria-haspopup="dialog">Create a Post</button>
+  </section>
+
+  <!-- Posts Feed -->
+  <section id="posts-list" aria-live="polite">
+    {% for post in posts %}
+    <article class="post-card" data-id="{{ post.id }}">
+      <header>
+        <h3 class="post-title">{{ post.title }}</h3>
+        <div class="post-menu three-dots" data-id="{{ post.id }}" tabindex="0" role="button" aria-label="Post menu">⋯</div>
+      </header>
+
+      <div class="post-body">
+        <p>{{ post.caption }}</p>
+        {% if post.file_url %}
+          {% if post.file_mime.startswith('image/') %}
+            <img src="{{ post.file_url }}" alt="Post image" class="post-media" />
+          {% elif post.file_mime == 'application/pdf' %}
+            <iframe src="{{ post.file_url }}" class="post-media pdf-viewer"></iframe>
+          {% else %}
+            <a href="{{ post.file_url }}" download>Download attachment</a>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      <footer>
+        <button class="vote-up" data-id="{{ post.id }}">▲ <span class="count">{{ post.upvotes }}</span></button>
+        <button class="vote-down" data-id="{{ post.id }}">▼ <span class="count">{{ post.downvotes }}</span></button>
+        <button class="comment-toggle" data-id="{{ post.id }}">💬 Comments</button>
+      </footer>
+
+      <section class="comments" data-id="{{ post.id }}" style="display:none">
+        <div class="comments-list"></div>
+        <textarea class="comment-input" placeholder="Add a comment..." aria-label="Comment input"></textarea>
+        <button class="comment-send">Send</button>
+      </section>
+    </article>
+    {% else %}
+    <p class="no-posts">No posts yet. Be the first to create one!</p>
+    {% endfor %}
+  </section>
+
+  <div class="load-more-container">
+    <button id="load-more">Load More</button>
+  </div>
+</main>
+
+<!-- Post Modal -->
+<div id="post-modal" class="modal" role="dialog" aria-hidden="true" aria-labelledby="modal-title">
+  <div class="modal-content">
+    <h2 id="modal-title">Create a Post</h2>
+    <form id="post-form" enctype="multipart/form-data">
+      <label for="post-title">Title:</label>
+      <input type="text" name="title" id="post-title" required />
+
+      <label for="post-caption">Caption:</label>
+      <textarea name="caption" id="post-caption" required></textarea>
+
+      <label for="post-file">Attachment (optional):</label>
+      <input type="file" name="file" id="post-file" />
+
+      <label for="post-author">Author:</label>
+      <input type="text" name="author" id="post-author" required />
+
+      <div class="modal-actions">
+        <button type="button" id="post-publish">Publish</button>
+        <button type="button" id="post-cancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Snackbar for delete confirmation -->
+<div id="snackbar" class="snackbar" aria-live="assertive" style="display:none;">
+  <span id="snackbar-msg">Deleting post...</span>
+  <button id="snackbar-cancel">Cancel</button>
+</div>
+
+<footer class="footer">
+  <p>&copy; {{ current_year or 2025 }} DSAWebLectures</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 {% endblock %}

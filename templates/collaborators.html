@@ -1,10 +1,156 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
+{% block title %}Collaborators | DSAWebLectures{% endblock %}
 {% block content %}
-<section class="page">
-    <h2>Collaborators</h2>
-    <div class="collab-grid" id="collab-grid"></div>
-    <div id="card-modal" class="modal hidden">
-        <div class="modal-card" id="card-content"></div>
+</header>
+<main class="collaborators-page">
+  <section class="collab-hero">
+    <h2>Our Collaborators</h2>
+    <p>Meet the brilliant minds behind DSAWebLectures.</p>
+  </section>
+
+  <section class="collab-grid">
+    <button id="btn-lead-engineer" class="collab-btn">Lead Engineer</button>
+    <button id="btn-senior-developer" class="collab-btn">Senior Developer</button>
+    <button id="btn-junior-developer" class="collab-btn">Junior Developer</button>
+    <button id="btn-db-engineer" class="collab-btn">DB Engineer</button>
+    <button id="btn-graphics-designer" class="collab-btn">Graphics Designer</button>
+    <button id="btn-manager" class="collab-btn">Manager</button>
+  </section>
+
+  <!-- Collaborator Modals -->
+  <div id="collab-modals">
+    <!-- Lead Engineer -->
+    <div id="card-lead-engineer" class="collab-card modal" aria-hidden="true">
+      <div class="modal-content">
+        <img src="{{ url_for('static', filename='img/avatar_placeholder.png') }}" alt="Avatar" class="avatar" />
+        <h3>Lead Engineer</h3>
+        <p><strong>Name:</strong> Earl Jhon D. Dimla</p>
+        <p><strong>Student ID:</strong> 2024-03779-MN-0</p>
+        <p><strong>GitHub:</strong> <a href="https://github.com/Earl-cmyk" target="_blank">Earl-cmyk</a></p>
+        <button class="copy-btn" data-username="Earl-cmyk">Copy GitHub Username</button>
+        <button class="close-btn">Close</button>
+      </div>
     </div>
-</section>
+
+    <!-- Placeholder cards -->
+    <div id="card-senior-developer" class="collab-card modal" aria-hidden="true">
+      <div class="modal-content">
+        <img src="{{ url_for('static', filename='img/avatar_placeholder.png') }}" alt="Avatar" class="avatar" />
+        <h3>Senior Developer</h3>
+        <p><strong>Name:</strong> Placeholder 2</p>
+        <p><strong>Student ID:</strong> 2024-00000-MN-2</p>
+        <p><strong>GitHub:</strong> <a href="https://github.com/placeholder2" target="_blank">placeholder2</a></p>
+        <button class="copy-btn" data-username="placeholder2">Copy GitHub Username</button>
+        <button class="close-btn">Close</button>
+      </div>
+    </div>
+
+    <div id="card-junior-developer" class="collab-card modal" aria-hidden="true">
+      <div class="modal-content">
+        <img src="{{ url_for('static', filename='img/avatar_placeholder.png') }}" alt="Avatar" class="avatar" />
+        <h3>Junior Developer</h3>
+        <p><strong>Name:</strong> Placeholder 3</p>
+        <p><strong>Student ID:</strong> 2024-00000-MN-3</p>
+        <p><strong>GitHub:</strong> <a href="https://github.com/placeholder3" target="_blank">placeholder3</a></p>
+        <button class="copy-btn" data-username="placeholder3">Copy GitHub Username</button>
+        <button class="close-btn">Close</button>
+      </div>
+    </div>
+
+    <div id="card-db-engineer" class="collab-card modal" aria-hidden="true">
+      <div class="modal-content">
+        <img src="{{ url_for('static', filename='img/avatar_placeholder.png') }}" alt="Avatar" class="avatar" />
+        <h3>DB Engineer</h3>
+        <p><strong>Name:</strong> Placeholder 4</p>
+        <p><strong>Student ID:</strong> 2024-00000-MN-4</p>
+        <p><strong>GitHub:</strong> <a href="https://github.com/placeholder4" target="_blank">placeholder4</a></p>
+        <button class="copy-btn" data-username="placeholder4">Copy GitHub Username</button>
+        <button class="close-btn">Close</button>
+      </div>
+    </div>
+
+    <div id="card-graphics-designer" class="collab-card modal" aria-hidden="true">
+      <div class="modal-content">
+        <img src="{{ url_for('static', filename='img/avatar_placeholder.png') }}" alt="Avatar" class="avatar" />
+        <h3>Graphics Designer</h3>
+        <p><strong>Name:</strong> Placeholder 5</p>
+        <p><strong>Student ID:</strong> 2024-00000-MN-5</p>
+        <p><strong>GitHub:</strong> <a href="https://github.com/placeholder5" target="_blank">placeholder5</a></p>
+        <button class="copy-btn" data-username="placeholder5">Copy GitHub Username</button>
+        <button class="close-btn">Close</button>
+      </div>
+    </div>
+
+    <div id="card-manager" class="collab-card modal" aria-hidden="true">
+      <div class="modal-content">
+        <img src="{{ url_for('static', filename='img/avatar_placeholder.png') }}" alt="Avatar" class="avatar" />
+        <h3>Manager</h3>
+        <p><strong>Name:</strong> Placeholder 6</p>
+        <p><strong>Student ID:</strong> 2024-00000-MN-6</p>
+        <p><strong>GitHub:</strong> <a href="https://github.com/placeholder6" target="_blank">placeholder6</a></p>
+        <button class="copy-btn" data-username="placeholder6">Copy GitHub Username</button>
+        <button class="close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>&copy; {{ current_year or 2025 }} DSAWebLectures</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script>
+  // Toggle modal visibility
+  const buttons = [
+    { btn: 'btn-lead-engineer', card: 'card-lead-engineer' },
+    { btn: 'btn-senior-developer', card: 'card-senior-developer' },
+    { btn: 'btn-junior-developer', card: 'card-junior-developer' },
+    { btn: 'btn-db-engineer', card: 'card-db-engineer' },
+    { btn: 'btn-graphics-designer', card: 'card-graphics-designer' },
+    { btn: 'btn-manager', card: 'card-manager' },
+  ];
+
+  buttons.forEach(({ btn, card }) => {
+    const trigger = document.getElementById(btn);
+    const modal = document.getElementById(card);
+    if (trigger && modal) {
+      trigger.addEventListener('click', () => {
+        modal.style.display = 'block';
+        modal.setAttribute('aria-hidden', 'false');
+      });
+      modal.querySelector('.close-btn').addEventListener('click', () => {
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+      });
+    }
+  });
+
+  // Copy GitHub username
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      navigator.clipboard.writeText(btn.dataset.username).then(() => {
+        alert(`Copied ${btn.dataset.username} to clipboard!`);
+      });
+    });
+  });
+
+  // Optional: Fetch collaborators from API and replace placeholders dynamically
+  fetch('/api/collaborators')
+    .then(res => res.ok ? res.json() : Promise.reject())
+    .then(data => {
+      data.forEach((c, i) => {
+        const card = document.querySelectorAll('.collab-card .modal-content')[i];
+        if (card) {
+          card.querySelector('h3').textContent = c.role;
+          card.querySelector('p strong').nextSibling.textContent = ' ' + c.name;
+          card.querySelectorAll('p')[1].innerHTML = `<strong>Student ID:</strong> ${c.student_id || ''}`;
+          card.querySelectorAll('p')[2].innerHTML =
+            `<strong>GitHub:</strong> <a href="https://github.com/${c.github}" target="_blank">${c.github}</a>`;
+          card.querySelector('.copy-btn').dataset.username = c.github;
+        }
+      });
+    })
+    .catch(() => console.log('Using local placeholders...'));
+</script>
 {% endblock %}

@@ -1,12 +1,33 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
+{% block title %}DSAWebLectures{% endblock %}
 {% block content %}
-<section class="hero">
-    <h1>Welcome to DSALectures <small>subject to change</small></h1>
-    <div class="home-search"><input id="home-search" placeholder="Search posts, lectures, captions..."/></div>
-    <div class="tile-row">
-        <div class="tile" onclick="location.href='/lectures'"> <div>Lectures</div></div>
-        <div class="tile" onclick="location.href='/collaborators'">
-<div>Collaborators</div></div>
+<section class="hero fade-in">
+  <div class="hero-inner">
+    <h1 class="hero-title">
+      Welcome to <span class="accent">DSALectures</span>
+      <small>subject to change</small>
+    </h1>
+
+    <div class="hero-search">
+      <input
+        id="home-search"
+        class="search-input"
+        type="text"
+        placeholder="Search posts, lectures, captions..."
+      />
     </div>
+
+    <div class="tile-row">
+      <div class="tile tile-lectures" onclick="location.href='{{ url_for('lectures') }}'">
+        <div class="tile-icon">📚</div>
+        <div class="tile-label">Lectures</div>
+      </div>
+
+      <div class="tile tile-collaborators" onclick="location.href='{{ url_for('collaborators_page') }}'">
+        <div class="tile-icon">🤝</div>
+        <div class="tile-label">Collaborators</div>
+      </div>
+    </div>
+  </div>
 </section>
 {% endblock %}
